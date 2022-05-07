@@ -35,6 +35,43 @@ import moment
 
 from django.template.loader import render_to_string
 
+
+class Gender(Enum):
+    Male = 1
+    Female = 2
+
+
+# TODO:
+
+discount_messages = [
+    {
+        "gender": Gender.Male.value,
+        "number": 20,
+        "products": [
+            "White Wine",
+            "iPhone X"
+        ]
+    },
+    {
+        "gender": Gender.Female.value,
+        "number": 50,
+        "products": [
+            "Cosmetic",
+            "LV Handbags"
+        ]
+    }
+]
+
+
+def get_message_from_different_gender(gender):
+    if gender == Gender.Male.value or gender == Gender.Female.value:
+        filtered_messages = filter(lambda message: message["gender"] == gender, discount_messages)
+
+        return next(filtered_messages, None)
+    else:
+        raise Exception("Not valid gender value")
+
+
 class MemberList(APIView):
     permission_classes = (AllowAny,)
 
@@ -65,13 +102,17 @@ class MemberList(APIView):
         messages = []
 
         for member in members:
-            messages.append({
-                "Subject: Happy birthday!"
-            })
-            messages.append({
-                "Happy birthday, dear {first_name}!".format(
-                    first_name=member.first_name
-                )
-            })
+            try:
+                tailer_made_message = get_message_from_different_gender(member.gender)
+
+                messages.append({
+                    "email": member.email,
+                    "subject": "Happy birthday!",
+                    "message": "Happy birthday, dear {first_name}!\n".format(first_name=member.first_name) +
+                    "We offer special discount {number}% off for the following items:\n".format(number=tailer_made_message["number"]) +
+                    "{products}".format(products=", ".join(tailer_made_message["products"]))
+                })
+            except Exception as e:
+                return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
 
         return Response(messages)
