@@ -93,14 +93,23 @@ WSGI_APPLICATION = "kata.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+
+
+
 DATABASES = {
+    # 上線
+    # "default": {
+    #     "ENGINE": "django.db.backends.mysql",
+    #     "NAME": "kata_api_db",
+    #     "USER": "line",
+    #     "PASSWORD": "1qaz@WSX",
+    #     "HOST": "kata_api_db",
+    #     "PORT": 3306,
+    # },
+    # 測試
     "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": "kata_api_db",
-        "USER": "line",
-        "PASSWORD": "1qaz@WSX",
-        "HOST": "kata_api_db",
-        "PORT": 3306,
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": os.path.join(BASE_DIR, "kata-test.sqlite3")
     }
 }
 
