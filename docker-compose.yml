@@ -1,0 +1,39 @@
+version: "3.1"
+
+services:
+  api:
+    restart: always
+    container_name: kata_api
+    build: .
+    command: bash -c "python kata/manage.py crontab add && cron start && gunicorn -c gunicorn.py --chdir /kata/kata kata.wsgi:application"
+    ports:
+      - '9001:5000'
+    volumes:
+      - .:/kata
+      - ./gunicorn.py:/gunicorn.py
+    environment:
+      - TZ=Asia/Taipei
+    networks:
+      - kata-api
+
+  mariadb:
+    restart: always
+    image: mariadb:10.2.8
+    hostname: kata_api_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=1qaz@WSX
+      - MYSQL_USER=line
+      - MYSQL_PASSWORD=1qaz@WSX
+      - MYSQL_DATABASE=kata_api_db
+    volumes:
+      - ./DATA/kata/mysql:/var/lib/mysql
+    ports:
+      - "33061:3306"
+    container_name: kata_api_db
+    networks:
+      - kata-api
+
+
+networks:
+  kata-api:
+    external: true
