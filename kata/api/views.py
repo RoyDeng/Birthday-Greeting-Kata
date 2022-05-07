@@ -19,6 +19,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework_xml.renderers import XMLRenderer
 from django.conf import settings
 from django_redis import get_redis_connection
 
@@ -37,6 +38,7 @@ from django.template.loader import render_to_string
 
 class MemberList(APIView):
     permission_classes = (AllowAny,)
+    renderer_classes = (XMLRenderer,)
 
     def get(self, request, format=None):
         date = self.request.query_params.get("date", "")

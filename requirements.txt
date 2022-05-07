@@ -19,3 +19,4 @@ django-jsonfield-backport
 websockets==6.0
 pyee==6.0.0
 pyppeteer
+djangorestframework-xml
