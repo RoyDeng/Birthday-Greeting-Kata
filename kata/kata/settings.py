@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     "django_crontab",
     "rest_framework",
     "corsheaders",
-    "rest_framework_simplejwt.token_blacklist",
+    # "rest_framework_simplejwt.token_blacklist",
     "api",
     "django_jsonfield_backport",
 ]
@@ -95,12 +95,13 @@ WSGI_APPLICATION = "kata.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.mysql",
+        "ENGINE": "djongo",
         "NAME": "kata_api_db",
-        "USER": "line",
-        "PASSWORD": "1qaz@WSX",
-        "HOST": "kata_api_db",
-        "PORT": 3306,
+        "CLIENT": {
+            "host": "kata_api_mongodb",
+            "username": "line",
+            "password": "1qaz@WSX",
+        }
     }
 }
 
@@ -164,7 +165,7 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=24 * 60),
     # 'REFRESH_TOKEN_LIFETIME': timedelta(minutes=60 * 6),
     "ROTATE_REFRESH_TOKENS": False,
-    "BLACKLIST_AFTER_ROTATION": True,
+    # "BLACKLIST_AFTER_ROTATION": True,
     "ALGORITHM": "HS256",
     "SIGNING_KEY": SECRET_KEY,
     "VERIFYING_KEY": None,

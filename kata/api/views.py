@@ -49,14 +49,12 @@ class MemberList(APIView):
         except ValueError:
             return Response("Not date format", status=status.HTTP_400_BAD_REQUEST)
 
-        month = int(date.split("-")[0])
-        day = int(date.split("-")[1])
+        # TODO: djongo 無法處理 ORM 的日期篩選
+        month = date.split("-")[0]
+        day = date.split("-")[1]
 
         pagination = MemberPagination()
-        members = Member.objects.filter(
-            date_of_birth__month=month,
-            date_of_birth__day=day
-        )
+        members = Member.objects.all()
         members = pagination.paginate_queryset(
             queryset=members,
             request=request

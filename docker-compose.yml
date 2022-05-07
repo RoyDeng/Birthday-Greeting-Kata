@@ -16,20 +16,23 @@ services:
     networks:
       - kata-api
 
-  mariadb:
-    restart: always
-    image: mariadb:10.2.8
-    hostname: kata_api_db
+  mongodb:
+    image: mongo
+    hostname: kata_api_mongodb
+    container_name: kata_api_mongodb
     environment:
-      - MYSQL_ROOT_PASSWORD=1qaz@WSX
-      - MYSQL_USER=line
-      - MYSQL_PASSWORD=1qaz@WSX
-      - MYSQL_DATABASE=kata_api_db
+      MONGO_INITDB_ROOT_USERNAME: line
+      MONGO_INITDB_ROOT_PASSWORD: 1qaz@WSX
+      MONGO_INITDB_DATABASE: kata_api_db
+    logging:
+      driver: json-file
+      options:
+        max-size: 50m
+    restart: always
     volumes:
-      - ./DATA/kata/mysql:/var/lib/mysql
+      - ./DATA/kata/mongodb:/data/db
     ports:
-      - "33061:3306"
-    container_name: kata_api_db
+      - 27017:27017
     networks:
       - kata-api
 
