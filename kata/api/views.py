@@ -39,24 +39,8 @@ class MemberList(APIView):
     permission_classes = (AllowAny,)
 
     def get(self, request, format=None):
-        date = self.request.query_params.get("date", "")
-
-        if date == "":
-            return Response("Date is null", status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            datetime.strptime(date, "%m-%d")
-        except ValueError:
-            return Response("Not date format", status=status.HTTP_400_BAD_REQUEST)
-
-        month = int(date.split("-")[0])
-        day = int(date.split("-")[1])
-
         pagination = MemberPagination()
-        members = Member.objects.filter(
-            date_of_birth__month=month,
-            date_of_birth__day=day
-        )
+        members = Member.objects.all()
         members = pagination.paginate_queryset(
             queryset=members,
             request=request
@@ -65,12 +49,14 @@ class MemberList(APIView):
         messages = []
 
         for member in members:
-            messages.append({
-                "email": member.email,
-                "subject": "Happy birthday!",
-                "message": "Happy birthday, dear {first_name}!".format(
-                    first_name=member.first_name
-                )
-            })
+            if member.age > 49:
+                messages.append({
+                    "email": member.email,
+                    "subject": "Happy birthday!",
+                    "message": "Happy birthday, dear `{first_name}`!".format(
+                        first_name=member.first_name
+                    ),
+                    "picture": "https://scontent.ftpe15-1.fna.fbcdn.net/v/t1.6435-9/173822014_801912067086569_6354124022379710057_n.jpg?_nc_cat=100&ccb=1-6&_nc_sid=730e14&_nc_ohc=Ez4EXqHzALUAX-c15yj&_nc_ht=scontent.ftpe15-1.fna&oh=00_AT_v4wjNbvpEojVwl5xkDHI4TBL8gAZZ8A03MLjlxfmnyA&oe=629B5D03"
+                })
 
         return Response(messages)

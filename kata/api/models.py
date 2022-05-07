@@ -2,6 +2,8 @@ import uuid
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from datetime import datetime
+
 
 class Member(models.Model):
     class Gender(models.IntegerChoices):
@@ -33,3 +35,7 @@ class Member(models.Model):
     updated_at = models.DateTimeField(
         auto_now=True
     )
+
+    @property
+    def age(self):
+        return int((datetime.now().date() - self.date_of_birth).days / 365.25)
