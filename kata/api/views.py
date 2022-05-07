@@ -40,8 +40,12 @@ class Gender(Enum):
     Male = 1
     Female = 2
 
+    @classmethod
+    def has_value(cls, value):
+        return value in cls._value2member_map_ 
 
-# TODO:
+
+# TODO: 存放至資料庫
 
 discount_messages = [
     {
@@ -64,7 +68,7 @@ discount_messages = [
 
 
 def get_message_from_different_gender(gender):
-    if gender == Gender.Male.value or gender == Gender.Female.value:
+    if Gender.has_value(gender):
         filtered_messages = filter(lambda message: message["gender"] == gender, discount_messages)
 
         return next(filtered_messages, None)
