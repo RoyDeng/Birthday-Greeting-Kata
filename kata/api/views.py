@@ -68,8 +68,9 @@ class MemberList(APIView):
             messages.append({
                 "email": member.email,
                 "subject": "Happy birthday!",
-                "message": "Happy birthday, dear {first_name}!".format(
-                    first_name=member.first_name
+                "message": "Happy birthday, dear {last_name}, {first_name}!".format(
+                    first_name=member.first_name,
+                    last_name=member.last_name
                 )
             })
 
